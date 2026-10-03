@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dinheiro Organizado — Organizador Financeiro</title>
+
+  <!-- Fonte (se estiver sem internet, o navegador usa a fonte do sistema) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+
+  <!-- Estilos -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main>
+
+    <!-- ========== 1. CABEÇALHO: título e nome do usuário ========== -->
+    <header class="topo">
+      <div>
+        <h1>Dinheiro Organizado</h1>
+        <p class="muted">Registre o que entra, o que sai e o que você guarda. Veja o saldo na hora.</p>
+      </div>
+
+      <div class="usuario">
+        <label for="nome">Seu nome</label>
+        <input id="nome" type="text" placeholder="Ex.: Ana" autocomplete="given-name" maxlength="40">
+      </div>
+    </header>
+
+    <!-- ========== 2. RESUMO FINANCEIRO ========== -->
+    <section class="resumo" aria-live="polite">
+
+      <!-- Saldo disponível -->
+      <div class="saldo">
+        <small id="saldo-titulo">Saldo disponível</small>
+        <div class="saldo__valor" id="saldo">R$ 0,00</div>
+        <small>Entradas − gastos − valores guardados</small>
+      </div>
+
+      <!-- Totais: entradas, gastos e guardado -->
+      <div class="totais">
+        <div class="total total--entrada">
+          <span>Entradas</span>
+          <b id="total-entradas">R$ 0,00</b>
+        </div>
+        <div class="total total--gasto">
+          <span>Gastos</span>
+          <b id="total-gastos">R$ 0,00</b>
+        </div>
+        <div class="total total--guardado">
+          <span>Guardado</span>
+          <b id="total-guardado">R$ 0,00</b>
+        </div>
+      </div>
+
+      <!-- Distribuição em porcentagem + orientação -->
+      <div class="painel">
+        <h2>Para onde foi o seu dinheiro</h2>
+
+        <div class="barra" id="barra" role="img"
+             aria-label="Distribuição das entradas entre gastos, guardado e saldo"></div>
+
+        <div class="legenda">
+          <em style="--cor: var(--gasto)">Gastos <span id="pct-gastos">0%</span></em>
+          <em style="--cor: var(--guardado)">Guardado <span id="pct-guardado">0%</span></em>
+          <em style="--cor: var(--entrada)">Sobrou <span id="pct-sobra">0%</span></em>
+        </div>
+
+        <div class="dica">
+          <b>Próximo passo</b>
+          <span id="dica"></span>
+        </div>
+      </div>
+
+      <!-- Gráfico das operações (desenhado pelo script.js) -->
+      <div class="painel grafico">
+        <h2>Gráfico das operações</h2>
+        <div id="grafico"></div>
+      </div>
+    </section>
+
+    <!-- ========== 3. ABAS: Gastos, Entradas e Caixinhas ========== -->
+    <div class="abas" role="tablist" aria-label="Tipo de registro">
+      <button role="tab" id="aba-despesas"  aria-selected="true"  aria-controls="registros" data-tipo="despesas">Gastos</button>
+      <button role="tab" id="aba-entradas"  aria-selected="false" aria-controls="registros" data-tipo="entradas">Entradas</button>
+      <button role="tab" id="aba-caixinhas" aria-selected="false" aria-controls="registros" data-tipo="caixinhas">Caixinhas</button>
+    </div>
+
+    <!-- ========== 4. FORMULÁRIO E LISTA DE REGISTROS ========== -->
+    <section class="painel" id="registros" role="tabpanel" aria-labelledby="aba-despesas">
+      <h2 id="registros-titulo"></h2>
+      <p class="muted registros-ajuda" id="registros-ajuda"></p>
+
+      <form id="formulario" novalidate>
+        <div>
+          <label for="descricao">Descrição</label>
+          <input id="descricao" type="text" maxlength="60" autocomplete="off">
+        </div>
+        <div>
+          <label for="valor">Valor (R$)</label>
+          <input id="valor" type="text" inputmode="decimal" placeholder="0,00" autocomplete="off">
+        </div>
+        <button class="btn" type="submit">Adicionar</button>
+      </form>
+
+      <div class="erro" id="erro" role="alert"></div>
+
+      <ul id="lista"></ul>
+
+      <div class="subtotal">
+        <span>Total</span>
+        <span id="subtotal">R$ 0,00</span>
+      </div>
+    </section>
+
+    <!-- ========== 5. DADOS EM JSON ========== -->
+    <details>
+      <summary>Dados em JSON</summary>
+      <p class="muted json-ajuda">É assim que o sistema guarda e troca as suas informações.</p>
+      <pre id="json"></pre>
+
+      <div class="acoes">
+        <button class="btn btn--contorno" id="copiar" type="button">Copiar JSON</button>
+        <button class="btn btn--contorno" id="limpar" type="button">Apagar tudo</button>
+      </div>
+    </details>
+
+    <footer>Os dados ficam só neste navegador. Nada é enviado para a internet.</footer>
+  </main>
+
+  <!-- Lógica -->
+  <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,481 @@
+/* ==========================================================================
+   Dinheiro Organizado — Estilos
+   Índice:
+     1. Variáveis (cores)
+     2. Base
+     3. Cabeçalho
+     4. Painéis e formulários
+     5. Resumo (saldo, totais, barra, dica)
+     6. Gráfico
+     7. Abas
+     8. Formulário de registro e lista
+     9. JSON, botões e rodapé
+    10. Acessibilidade
+   ========================================================================== */
+
+
+/* 1. VARIÁVEIS ------------------------------------------------------------ */
+
+:root {
+  /* Tema claro */
+  --fundo: #EEF3F0;
+  --cartao: #FFFFFF;
+  --texto: #000000;
+  --suave: #5A716E;       /* texto secundário */
+  --linha: #D3DEDA;
+  --realce: #E3ECE8;      /* fundos de apoio */
+
+  --entrada: #1E7F5C;
+  --gasto: #C8452F;
+  --guardado: #B8800F;
+
+  --destaque: #000000;    /* saldo e botões */
+  --destaque-texto: #FFFFFF;
+
+  /* Respeita as barras do sistema em celulares */
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Tema escuro automático (segue o sistema do usuário) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fundo: #0A0A0A;
+    --cartao: #161616;
+    --texto: #E6F1ED;
+    --suave: #93ADA8;
+    --linha: #2E2E2E;
+    --realce: #1F1F1F;
+
+    --entrada: #4FD3A0;
+    --gasto: #FF8B73;
+    --guardado: #F0B84A;
+
+    --destaque: #4FD3A0;
+    --destaque-texto: #0A0A0A;
+  }
+}
+
+
+/* 2. BASE ----------------------------------------------------------------- */
+
+html {
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 20px 16px 48px;
+}
+
+h1 {
+  margin: 0 0 6px;
+  font-size: clamp(1.7rem, 5vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+.muted {
+  color: var(--suave);
+}
+
+
+/* 3. CABEÇALHO ------------------------------------------------------------ */
+
+.topo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.usuario {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+}
+
+
+/* 4. PAINÉIS E CAMPOS ----------------------------------------------------- */
+
+.painel {
+  padding: 18px;
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-radius: 16px;
+}
+
+label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: 11px 12px;
+  font: inherit;
+  color: var(--texto);
+  background: var(--fundo);
+  border: 1.5px solid var(--linha);
+  border-radius: 10px;
+}
+
+
+/* 5. RESUMO --------------------------------------------------------------- */
+
+.resumo {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+/* Cartão do saldo */
+.saldo {
+  padding: 22px;
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  border-radius: 20px;
+}
+
+.saldo small {
+  font-size: 0.95rem;
+  opacity: 0.8;
+}
+
+.saldo__valor {
+  font-size: clamp(2.2rem, 8vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+/* Totais */
+.totais {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.total {
+  padding: 12px 14px;
+  background: var(--cartao);
+  border: 1px solid var(--linha);
+  border-left-width: 6px;
+  border-radius: 14px;
+}
+
+.total span {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
+
+.total b {
+  font-size: clamp(1rem, 3.6vw, 1.45rem);
+  font-weight: 800;
+  overflow-wrap: anywhere;
+}
+
+.total--entrada  { border-left-color: var(--entrada); }
+.total--gasto    { border-left-color: var(--gasto); }
+.total--guardado { border-left-color: var(--guardado); }
+
+.total--entrada b  { color: var(--entrada); }
+.total--gasto b    { color: var(--gasto); }
+.total--guardado b { color: var(--guardado); }
+
+/* Barra de distribuição */
+.barra {
+  display: flex;
+  height: 14px;
+  margin: 12px 0 6px;
+  overflow: hidden;
+  background: var(--realce);
+  border-radius: 99px;
+}
+
+.barra i {
+  display: block;
+  height: 100%;
+  transition: width 0.4s;
+}
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
+
+.legenda em {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-style: normal;
+}
+
+.legenda em::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: var(--cor);
+  border-radius: 3px;
+}
+
+/* Orientação (próximo passo) */
+.dica {
+  margin-top: 14px;
+  padding: 14px 16px;
+  background: var(--realce);
+  border-left: 6px solid var(--guardado);
+  border-radius: 12px;
+}
+
+.dica b {
+  display: block;
+  margin-bottom: 2px;
+}
+
+
+/* 6. GRÁFICO -------------------------------------------------------------- */
+
+.grafico svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.grafico text {
+  fill: var(--suave);
+  font: 12px "Bricolage Grotesque", system-ui, sans-serif;
+}
+
+.grafico .valor {
+  fill: var(--texto);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.grafico .grade {
+  stroke: var(--linha);
+  stroke-width: 1;
+}
+
+.grafico .zero {
+  stroke: var(--suave);
+  stroke-width: 1.5;
+}
+
+
+/* 7. ABAS ----------------------------------------------------------------- */
+
+.abas {
+  display: flex;
+  gap: 6px;
+  margin: 22px 0 12px;
+  padding: 5px;
+  background: var(--realce);
+  border-radius: 14px;
+}
+
+.abas [role="tab"] {
+  flex: 1;
+  padding: 10px 6px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--suave);
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.abas [role="tab"][aria-selected="true"] {
+  color: var(--texto);
+  background: var(--cartao);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+
+/* 8. FORMULÁRIO DE REGISTRO E LISTA --------------------------------------- */
+
+.registros-ajuda {
+  margin-bottom: 12px;
+}
+
+form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 640px) {
+  form {
+    grid-template-columns: 2fr 1fr auto;
+    align-items: end;
+  }
+}
+
+.erro {
+  min-height: 1.3em;
+  margin: -6px 0 8px;
+  font-size: 0.9rem;
+  color: var(--gasto);
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 0;
+  border-top: 1px solid var(--linha);
+}
+
+li:first-child {
+  border-top: 0;
+}
+
+li .descricao {
+  overflow-wrap: anywhere;
+}
+
+li .valor-item {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+li button {
+  padding: 6px 8px;
+  font: inherit;
+  color: var(--suave);
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+li button:hover {
+  color: var(--gasto);
+}
+
+li.vazio {
+  color: var(--suave);
+}
+
+.subtotal {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  padding-top: 10px;
+  font-weight: 600;
+  border-top: 2px solid var(--linha);
+}
+
+
+/* 9. JSON, BOTÕES E RODAPÉ ------------------------------------------------ */
+
+details {
+  margin-top: 22px;
+}
+
+summary {
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.json-ajuda {
+  margin: 8px 0;
+}
+
+pre {
+  max-height: 320px;
+  padding: 14px;
+  overflow-x: auto;
+  font-size: 0.8rem;
+  background: var(--realce);
+  border-radius: 12px;
+}
+
+.acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn {
+  padding: 11px 18px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--destaque-texto);
+  background: var(--destaque);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.btn--contorno {
+  color: var(--texto);
+  background: transparent;
+  border: 1.5px solid var(--linha);
+}
+
+footer {
+  margin-top: 28px;
+  font-size: 0.85rem;
+  color: var(--suave);
+}
+
+
+/* 10. ACESSIBILIDADE ------------------------------------------------------ */
+
+input:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--guardado);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
